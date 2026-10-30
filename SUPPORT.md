@@ -4,14 +4,14 @@
 
 If you need help with Typst Claude Skill, here are the available channels:
 
-- **GitHub Discussions**: for general questions, feedback, and ideas, visit the [Discussions](https://github.com/ChanMeng666/typst-claude-skill/discussions) tab.
-- **GitHub Issues**: for bug reports and feature requests, [open an issue](https://github.com/ChanMeng666/typst-claude-skill/issues).
+- **GitHub Discussions**: for general questions, feedback, and ideas, visit the [Discussions](https://github.com/ChanMeng666/chanmeng-typst/discussions) tab.
+- **GitHub Issues**: for bug reports and feature requests, [open an issue](https://github.com/ChanMeng666/chanmeng-typst/issues).
 
 ## Before You Ask
 
 - Check the [README](README.md) for setup and usage instructions.
 - Review the [Contributing Guide](CONTRIBUTING.md) for development and build steps.
-- Search existing [issues](https://github.com/ChanMeng666/typst-claude-skill/issues) and [discussions](https://github.com/ChanMeng666/typst-claude-skill/discussions) — your question may already be answered.
+- Search existing [issues](https://github.com/ChanMeng666/chanmeng-typst/issues) and [discussions](https://github.com/ChanMeng666/chanmeng-typst/discussions) — your question may already be answered.
 
 ## Scope of Support
 

@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Typst v0.14+](https://img.shields.io/badge/Typst-v0.14%2B-blue)](https://typst.app/)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-green)](https://docs.anthropic.com/en/docs/claude-code/skills)
-[![Validate](https://github.com/ChanMeng666/typst-claude-skill/actions/workflows/validate.yml/badge.svg)](https://github.com/ChanMeng666/typst-claude-skill/actions/workflows/validate.yml)
+[![Validate](https://github.com/ChanMeng666/chanmeng-typst/actions/workflows/validate.yml/badge.svg)](https://github.com/ChanMeng666/chanmeng-typst/actions/workflows/validate.yml)
 
 A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that enables professional document generation using the [Typst](https://typst.app/) typesetting system.
 
@@ -46,20 +46,20 @@ Pick **one** of the four methods below. They are equivalent in capability — ch
 Inside Claude Code, run two commands:
 
 ```text
-/plugin marketplace add ChanMeng666/typst-claude-skill
-/plugin install typst@chan-typst
+/plugin marketplace add ChanMeng666/chanmeng-typst
+/plugin install chanmeng-typst@chanmeng-typst
 ```
 
-Auto-updates when the plugin's `version` field in `.claude-plugin/plugin.json` bumps. The marketplace name (`chan-typst`) and plugin name (`typst`) are declared in `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` respectively.
+Auto-updates when the plugin's `version` field in `.claude-plugin/plugin.json` bumps. The marketplace name (`chanmeng-typst`) and plugin name (`typst`) are declared in `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` respectively.
 
 ### Method 2 — Git clone (for users who want to hack on the skill)
 
-The repo's actual skill content lives at `skills/typst/` (so the plugin marketplace path can pick it up). To install via direct clone, copy that subdirectory into your user-level skills folder:
+The repo's actual skill content lives at `skills/chanmeng-typst/` (so the plugin marketplace path can pick it up). To install via direct clone, copy that subdirectory into your user-level skills folder:
 
 ```bash
 # macOS / Linux / Windows (Git Bash or WSL)
-git clone --depth 1 https://github.com/ChanMeng666/typst-claude-skill.git /tmp/_typst-src \
-  && mv /tmp/_typst-src/skills/typst ~/.claude/skills/typst \
+git clone --depth 1 https://github.com/ChanMeng666/chanmeng-typst.git /tmp/_typst-src \
+  && mv /tmp/_typst-src/skills/chanmeng-typst ~/.claude/skills/chanmeng-typst \
   && rm -rf /tmp/_typst-src
 ```
 
@@ -69,10 +69,10 @@ git clone --depth 1 https://github.com/ChanMeng666/typst-claude-skill.git /tmp/_
 
 For users without Git:
 
-1. Visit [`github.com/ChanMeng666/typst-claude-skill`](https://github.com/ChanMeng666/typst-claude-skill), click **Code → Download ZIP**.
+1. Visit [`github.com/ChanMeng666/chanmeng-typst`](https://github.com/ChanMeng666/chanmeng-typst), click **Code → Download ZIP**.
 2. Extract the archive.
-3. Inside the extracted folder, navigate to `skills/typst/` — that subdirectory **is** the skill.
-4. Move and rename `skills/typst/` to `~/.claude/skills/typst` (macOS / Linux) or `%USERPROFILE%\.claude\skills\typst` (Windows).
+3. Inside the extracted folder, navigate to `skills/chanmeng-typst/` — that subdirectory **is** the skill.
+4. Move and rename `skills/chanmeng-typst/` to `~/.claude/skills/chanmeng-typst` (macOS / Linux) or `%USERPROFILE%\.claude\skills\typst` (Windows).
 5. Confirm `SKILL.md` exists at the top of that destination folder.
 
 ### Method 4 — Project-level (per-project)
@@ -81,9 +81,9 @@ Use this when the skill should be available **only** inside one project (e.g. yo
 
 ```bash
 # Run from the project root
-git clone --depth 1 https://github.com/ChanMeng666/typst-claude-skill.git /tmp/_typst-src \
+git clone --depth 1 https://github.com/ChanMeng666/chanmeng-typst.git /tmp/_typst-src \
   && mkdir -p .claude/skills \
-  && mv /tmp/_typst-src/skills/typst .claude/skills/typst \
+  && mv /tmp/_typst-src/skills/chanmeng-typst .claude/skills/chanmeng-typst \
   && rm -rf /tmp/_typst-src
 ```
 
@@ -97,11 +97,11 @@ For **Method 1** (plugin marketplace), Claude Code installs the plugin to its ca
 
 > Run `bash $CLAUDE_PLUGIN_ROOT/scripts/verify-typst.sh` for the typst plugin.
 
-For **Methods 2, 3, 4** (skill copied into `~/.claude/skills/typst/` or `.claude/skills/typst/`):
+For **Methods 2, 3, 4** (skill copied into `~/.claude/skills/chanmeng-typst/` or `.claude/skills/chanmeng-typst/`):
 
 ```bash
-bash ~/.claude/skills/typst/scripts/verify-typst.sh
-# (or `bash .claude/skills/typst/scripts/verify-typst.sh` for Method 4)
+bash ~/.claude/skills/chanmeng-typst/scripts/verify-typst.sh
+# (or `bash .claude/skills/chanmeng-typst/scripts/verify-typst.sh` for Method 4)
 ```
 
 Expected output:
@@ -118,7 +118,7 @@ Expected output:
 
 Then ask Claude Code:
 
-> Read `~/.claude/skills/typst/SKILL.md` and tell me the skill name from its YAML frontmatter.
+> Read `~/.claude/skills/chanmeng-typst/SKILL.md` and tell me the skill name from its YAML frontmatter.
 
 If Claude reports `typst`, the skill is loaded.
 
@@ -127,7 +127,7 @@ If Claude reports `typst`, the skill is loaded.
 ### Repo layout (what you see on GitHub / after `git clone`)
 
 ```
-typst-claude-skill/
+chanmeng-typst/
 ├── .claude-plugin/
 │   ├── plugin.json                       # Plugin manifest (used by Method 1)
 │   └── marketplace.json                  # Marketplace catalog
@@ -153,12 +153,12 @@ typst-claude-skill/
 
 ### Installed layout (what the skill loader sees)
 
-For **Method 1 (plugin marketplace)**: files live under `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/skills/typst/` — Claude Code resolves paths automatically; you do not need to know the exact location.
+For **Method 1 (plugin marketplace)**: files live under `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/skills/chanmeng-typst/` — Claude Code resolves paths automatically; you do not need to know the exact location.
 
-For **Methods 2, 3, 4 (clone-and-move / ZIP / per-project)**: only the `skills/typst/` subdirectory is moved to your skills folder, so the resulting layout is flat:
+For **Methods 2, 3, 4 (clone-and-move / ZIP / per-project)**: only the `skills/chanmeng-typst/` subdirectory is moved to your skills folder, so the resulting layout is flat:
 
 ```
-~/.claude/skills/typst/  (or .claude/skills/typst/ for Method 4)
+~/.claude/skills/chanmeng-typst/  (or .claude/skills/chanmeng-typst/ for Method 4)
 ├── SKILL.md
 ├── references/…
 ├── scripts/verify-typst.sh
@@ -212,12 +212,12 @@ typst compile examples/hello-world.typ
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| Claude Code says "I don't see a Typst skill" | `SKILL.md` missing or in the wrong place | Verify the file exists at `~/.claude/skills/typst/SKILL.md` (or your chosen install path) and that the YAML frontmatter starts with `name: typst` |
+| Claude Code says "I don't see a Typst skill" | `SKILL.md` missing or in the wrong place | Verify the file exists at `~/.claude/skills/chanmeng-typst/SKILL.md` (or your chosen install path) and that the YAML frontmatter starts with `name: typst` |
 | `typst: command not found` | Typst CLI not on PATH | Reinstall via Prerequisites above; on Windows, restart the terminal after `winget install` |
-| `verify-typst.sh: Permission denied` | Script not executable on Linux/macOS | `chmod +x ~/.claude/skills/typst/scripts/verify-typst.sh` |
+| `verify-typst.sh: Permission denied` | Script not executable on Linux/macOS | `chmod +x ~/.claude/skills/chanmeng-typst/scripts/verify-typst.sh` |
 | `tofu` (□) glyphs in CJK output | Missing CJK font fallback chain | See SKILL.md § Gotchas; or run `typst fonts` to list installed fonts |
-| `/plugin install typst@chan-typst` fails with "marketplace not found" | Marketplace was not added in this Claude Code session | Re-run `/plugin marketplace add ChanMeng666/typst-claude-skill` first |
-| Plugin installs but skill does not appear | Stale plugin cache | `/plugin marketplace update chan-typst` then retry install |
+| `/plugin install chanmeng-typst@chanmeng-typst` fails with "marketplace not found" | Marketplace was not added in this Claude Code session | Re-run `/plugin marketplace add ChanMeng666/chanmeng-typst` first |
+| Plugin installs but skill does not appear | Stale plugin cache | `/plugin marketplace update chanmeng-typst` then retry install |
 
 For deeper diagnostics, run Claude Code with `claude --debug` and look for `loading plugin` messages.
 

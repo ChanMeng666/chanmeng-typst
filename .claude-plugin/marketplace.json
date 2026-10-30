@@ -1,5 +1,5 @@
 {
-  "name": "chan-typst",
+  "name": "chanmeng-typst",
   "description": "Chan Meng's Claude Code skills — currently a single Typst document-generation plugin.",
   "owner": {
     "name": "Chan Meng",
@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "name": "typst",
+      "name": "chanmeng-typst",
       "source": "./",
       "description": "Generate professional PDFs (CVs, cover letters, papers, reports, slides, invoices) via the Typst typesetting system. Strong CJK support.",
       "category": "document-generation",

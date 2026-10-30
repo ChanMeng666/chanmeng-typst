@@ -1,5 +1,5 @@
 ---
-name: typst
+name: chanmeng-typst
 description: >
   Generate professional PDF documents using the Typst typesetting system.
   Use when the user asks to create a PDF, write a document, generate a
