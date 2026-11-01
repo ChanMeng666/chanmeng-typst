@@ -26,6 +26,26 @@ Let one side own the gap through a named value and set the other to `0pt`:
 #let entry(body) = block(above: 0pt, below: gap-entry, body)
 ```
 
+### `v()` between two lines replaces the leading
+
+`v()` splits the paragraph, so the gap becomes N rather than the leading plus N. A small value therefore moves the lines closer. A weak `v()` at the end of a block is discarded altogether. If a title looks glued to the line below it, or a spacing edit seems to do nothing, this is the likely cause.
+
+Measured between two 9.5pt lines at `leading: 0.55em`:
+
+| Between the lines | Gap |
+|---|---|
+| `linebreak()` alone | 5.2pt, the leading |
+| `v(2pt, weak: true)` | 2pt |
+| `v(8pt, weak: true)` | 8pt |
+| `v(8pt, weak: true)` ending the first line's block | 0pt |
+
+Give each line its own block, so the gap is exactly what you wrote:
+
+```typst
+#block(above: 0pt, below: 5pt)[*Job title*]
+#block(above: 0pt)[Company | 2024 - Present]
+```
+
 ### Use one spacing scale, and keep its steps distinct
 
 Readers see structure through relative gaps. Each level should be clearly larger than the one below it: wrapped line, then bullet, then entry, then section. Define the whole ladder in one place and change the scale, not individual call sites, so the hierarchy survives edits.
