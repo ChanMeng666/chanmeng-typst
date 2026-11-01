@@ -1,4 +1,4 @@
-# Contributing to Typst Claude Skill
+# Contributing to chanmeng-typst
 
 Thank you for your interest in contributing! This guide explains how to get involved.
 
@@ -36,7 +36,7 @@ Have an idea? [Open a feature request](https://github.com/ChanMeng666/chanmeng-t
 
 ## Development Setup
 
-See the [README](README.md) for setup and usage instructions for this project.
+See the [README](README.md) for setup and usage, and [CLAUDE.md](CLAUDE.md) for the checks, release steps and known limits.
 
 ## Code of Conduct
 
