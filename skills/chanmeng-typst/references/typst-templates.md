@@ -24,7 +24,7 @@ Ready-to-use templates for common document types.
     #h(1fr)
   ],
 )
-#set text(font: "Linux Libertine", size: 11pt)
+#set text(font: "Libertinus Serif", size: 11pt)
 #set heading(numbering: "1.1")
 #set par(justify: true, leading: 0.8em)
 
@@ -134,7 +134,7 @@ Summary content...
 ) = {
   set document(title: title, author: authors.map(a => a.name))
   set page(paper: "us-letter", margin: (top: 2.5cm, bottom: 2.5cm, left: 2cm, right: 2cm))
-  set text(font: "Linux Libertine", size: 11pt)
+  set text(font: "Libertinus Serif", size: 11pt)
   set heading(numbering: "1.1")
   set par(justify: true, leading: 0.65em)
   set math.equation(numbering: "(1)")
@@ -242,7 +242,7 @@ We have presented...
 #let resume(name: "", contact: (), body) = {
   set document(title: name + " - Resume", author: name)
   set page(paper: "a4", margin: (top: 1.5cm, bottom: 1.5cm, left: 2cm, right: 2cm))
-  set text(font: "Linux Libertine", size: 10pt)
+  set text(font: "Libertinus Serif", size: 10pt)
   set par(justify: true)
 
   show heading.where(level: 1): it => {
@@ -338,8 +338,9 @@ Inspired by the `typst-typographic-resume` package pattern.
 // === Theme system ===
 #let default-theme = (
   margin: 26pt,
-  font: "Linux Libertine",
+  font: "Libertinus Serif",
   font-size: 9pt,
+  // Arial ships with Windows and macOS. On Linux, name a sans font you have installed.
   font-secondary: "Arial",
   font-tertiary: "Arial",
   text-color: rgb("#3f454d"),
@@ -351,14 +352,14 @@ Inspired by the `typst-typographic-resume` package pattern.
 
 // === Component functions ===
 
-#let section(theme: (), title, body) = {
+#let section(theme: (:), title, body) = {
   show heading.where(level: 1): set align(end)
   show heading.where(level: 1): set text(
     font: theme.at("font-tertiary", default: default-theme.font-tertiary),
     weight: "light",
     size: theme.at("font-size", default: default-theme.font-size),
   )
-  v(1fr)
+  v(18pt, weak: true)
   heading(level: 1, upper(title))
   { set block(above: 2pt, below: 14pt); line(stroke: 1pt, length: 100%) }
   body
@@ -372,8 +373,8 @@ Inspired by the `typst-typographic-resume` package pattern.
   )
 }
 
-#let work-entry(theme: (), timeframe: "", title: "", organization: "", location: "", body) = {
-  v(1fr)
+#let work-entry(theme: (:), timeframe: "", title: "", organization: "", location: "", body) = {
+  v(12pt, weak: true)
   {
     set text(font: theme.at("font-secondary", default: default-theme.font-secondary))
     set block(above: 0pt, below: 0pt)
@@ -389,18 +390,18 @@ Inspired by the `typst-typographic-resume` package pattern.
   context { set text(fill: text.fill.lighten(30%)); set par(leading: 1em); body }
 }
 
-#let education-entry(theme: (), timeframe: "", title: "", institution: "", body) = {
+#let education-entry(theme: (:), timeframe: "", title: "", institution: "", ..details) = {
   {
     set text(font: theme.at("font-secondary", default: default-theme.font-secondary))
     stack(spacing: 5pt,
-      { set text(weight: "bold"); upper(title) },
+      text(weight: "bold", title), // No upper(): it would turn "BDes" into "BDES"
       institution,
     )
     { set block(above: 6pt, below: 8pt); line(stroke: 0.1pt, length: 100%) }
   }
   context {
-    set text(weight: "light", fill: text.fill.lighten(30%))
-    stack(spacing: 8pt, body, {
+    set text(weight: "light", fill: text.fill.lighten(15%))
+    stack(spacing: 8pt, ..details.pos(), {
       set text(font: theme.at("font-secondary", default: default-theme.font-secondary))
       timeframe
     })
@@ -416,7 +417,7 @@ Inspired by the `typst-typographic-resume` package pattern.
 
 #let resume(
   first-name: "", last-name: "", profession: "", bio: "",
-  profile-picture: none, theme: (), aside: [], main,
+  profile-picture: none, theme: (:), aside: [], main,
 ) = {
   let th(key) = if key in theme { theme.at(key) } else { default-theme.at(key) }
 
@@ -447,7 +448,7 @@ Inspired by the `typst-typographic-resume` package pattern.
         set align(center)
         set image(width: th("profile-picture-width"))
         profile-picture
-      } else { v(1fr) }
+      } else { v(16pt) }
 
       { set text(weight: "light", style: "italic", hyphenate: true)
         set par(leading: 1.0em)
@@ -517,7 +518,7 @@ Inspired by the `typst-typographic-resume` package pattern.
 
 ```typst
 #set page(paper: "a4", margin: 2.5cm)
-#set text(font: "Linux Libertine", size: 11pt)
+#set text(font: "Libertinus Serif", size: 11pt)
 #set par(justify: true)
 
 // Sender
@@ -557,6 +558,7 @@ Sincerely,
 #v(2em)
 
 Your Name
+```
 
 ---
 
@@ -578,7 +580,7 @@ Your Name
     align(center, text(size: 9pt)[Page #counter(page).display()])
   },
 )
-#set text(font: "Linux Libertine", size: 11pt)
+#set text(font: "Libertinus Serif", size: 11pt)
 #set heading(numbering: "1.1")
 #set par(justify: true, leading: 0.8em)
 
@@ -664,7 +666,7 @@ database:
   margin: (top: 2cm, bottom: 1.5cm, left: 2.5cm, right: 2.5cm),
   fill: white,
 )
-#set text(font: "Linux Libertine", size: 20pt)
+#set text(font: "Libertinus Serif", size: 20pt)
 
 #let slide(title: none, body) = {
   pagebreak(weak: true)
@@ -742,7 +744,7 @@ database:
 
 ```typst
 #set page(paper: "a4", margin: 2cm)
-#set text(font: "Linux Libertine", size: 10pt)
+#set text(font: "Libertinus Serif", size: 10pt)
 
 #grid(columns: (1fr, 1fr),
   [

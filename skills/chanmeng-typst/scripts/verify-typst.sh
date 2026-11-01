@@ -54,5 +54,18 @@ else
   echo "  Run 'typst fonts' to see all available fonts."
 fi
 
+# Check the tools that scripts/check-pdf.py needs
+echo
+echo "--- PDF Checking Tools ---"
+if command -v pdftotext &>/dev/null && command -v pdfinfo &>/dev/null \
+  && command -v pdffonts &>/dev/null && command -v pdfimages &>/dev/null; then
+  pass "poppler found, so scripts/check-pdf.py can run"
+else
+  warn "poppler not found. scripts/check-pdf.py needs it."
+  echo "  Install: winget install oschwartz10612.Poppler  (Windows)"
+  echo "           brew install poppler                   (macOS)"
+  echo "           apt install poppler-utils              (Debian/Ubuntu)"
+fi
+
 echo
 echo "=== Done ==="

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-11-01
+
+### Added
+- `scripts/check-pdf.py` checks a compiled PDF for page count, font embedding, text extraction, lost hyphens and bare `~`. Its `--ats` mode adds resume-specific checks.
+- `references/typst-pitfalls.md` covers bugs the compiler does not report. Each entry was reproduced on Typst 0.15.1.
+- `references/ats-resume.md` and `examples/resume-ats.typ` cover resumes read by job-portal parsers.
+- `references/typst-design-patterns.md` gains a section on long-lived document projects.
+- `SKILL.md` gains a verification step: render the pages, run the checker, and re-check after layout changes.
+- CI compiles every template in the references and runs `check-pdf.py` on the ATS example.
+- `evals/` holds three test cases for comparing versions of the skill.
+
+### Fixed
+- Letter template: the code block was never closed, so copying it included the next section's heading and failed to compile.
+- Two-column resume template: `theme: ()` was an array, not a dictionary, which failed to compile. `v(1fr)` also spread sections across the page with large gaps. Education details are now optional, and degree titles keep their capitalisation.
+- Replaced the nonexistent `Linux Libertine` font with `Libertinus Serif`.
+- `target()` examples now use `context`, which they require.
+- Language reference: corrected `angle.l` to `chevron.l` and a `join` example that failed on integers.
+- CLI reference: updated to 0.15.1, moved `typst query` to its replacement `typst eval --in`, and removed the nonexistent `typst packages`.
+- Trigger terms in Chinese moved from the `SKILL.md` body to `description`, where they can affect triggering.
+
 ## [0.4.0] — 2026-11-01
 
 ### Changed (breaking)

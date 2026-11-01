@@ -10,7 +10,7 @@ The canonical preamble pattern — put `set` rules at the top, then write conten
 
 ```typst
 #set page(paper: "a4", margin: 2.5cm)
-#set text(font: "Linux Libertine", size: 11pt)
+#set text(font: "Libertinus Serif", size: 11pt)
 #set heading(numbering: "1.1")
 #set par(justify: true, leading: 0.8em)
 
@@ -159,6 +159,35 @@ Build reusable entry components for structured documents (resumes, reports):
 
 ---
 
+## Long-Lived Document Projects
+
+A CV, report or brand template that will be edited for months should not be one file. Separate what changes for different reasons:
+
+```text
+cv/
+├── main.typ          # Page setup; includes the sections in order
+├── tokens.typ        # Colours, fonts, sizes, and the one spacing scale
+├── components.typ    # Reusable blocks such as entry() and section()
+├── sections/         # Content only, with no layout decisions
+├── data/             # Facts as YAML or JSON, when several outputs share them
+├── fonts/            # Licensed fonts kept with the project
+└── build.sh          # Compiles, then runs the checks
+```
+
+Compile from the project root:
+
+```bash
+typst compile --root . --font-path fonts main.typ build/cv.pdf
+```
+
+- **Name every value.** Components use `gap-entry` and `accent`, never literal `12pt` or a hex code, so a design change is a one-line edit.
+- **Paths starting with `/` resolve from `--root`.** Files outside the root are rejected, so shared assets belong inside it.
+- **Variants import, they do not copy.** A second layout should reuse `tokens.typ` and the same data. A copied block of facts drifts from the original without any error.
+- **Trace figures to a source.** For reports and CVs, load facts from the data files or keep a note of where each number came from.
+- **Make the build fail loudly.** Stop on a non-zero `typst compile` exit, then run `scripts/check-pdf.py`. See `references/typst-pitfalls.md` § Build and metadata.
+
+---
+
 ## Custom Fonts with `--font-path`
 
 When using non-system fonts, bundle them and compile with:
@@ -173,10 +202,10 @@ Use `typst fonts --font-path ./fonts` to verify fonts are discovered.
 
 ## Conditional Rendering (PDF vs HTML)
 
-Use `target()` to produce format-specific output:
+`target()` needs `context`. Use it to produce format-specific output:
 
 ```typst
-#let note(body) = {
+#let note(body) = context {
   if target() == "html" {
     // HTML: semantic element
     html.elem("div", attrs: (class: "note"), body)
@@ -260,4 +289,4 @@ Typst's PDF backend (powered by `pdf-writer`) supports:
 - **Fonts**: Full Unicode/CJK support via composite fonts (Type0 + CID)
 - **Advanced graphics**: Transparency, blending modes, soft masks, gradients
 - **Interactive elements**: Clickable links, annotations
-- **Reproducible builds**: Use `SOURCE_DATE_EPOCH` for deterministic output
+- **Reproducible builds**: Pin `document(date: ...)`, or set `SOURCE_DATE_EPOCH`, for byte-identical output

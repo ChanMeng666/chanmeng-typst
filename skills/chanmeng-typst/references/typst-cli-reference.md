@@ -1,4 +1,4 @@
-# Typst CLI Reference (v0.14.2)
+# Typst CLI Reference (v0.15.1)
 
 Complete reference for the Typst command-line interface.
 
@@ -26,7 +26,7 @@ typst compile [OPTIONS] <INPUT> [OUTPUT]
 
 | Option | Env Variable | Description |
 |--------|-------------|-------------|
-| `-f, --format <FORMAT>` | — | Output format: `pdf`, `png`, `svg`, `html` |
+| `-f, --format <FORMAT>` | — | Output format: `pdf`, `png`, `svg`, `html`, `bundle` (experimental) |
 | `--root <DIR>` | `TYPST_ROOT` | Project root for absolute paths |
 | `--input <key=value>` | — | Key-value pairs accessible via `sys.inputs` |
 | `--font-path <DIR>` | `TYPST_FONT_PATHS` | Additional font directories |
@@ -45,7 +45,7 @@ typst compile [OPTIONS] <INPUT> [OUTPUT]
 | `--features <FEAT>` | `TYPST_FEATURES` | Enable experimental features: `html`, `a11y-extras` |
 | `--diagnostic-format <FMT>` | — | Diagnostic format: `human`, `short` |
 | `--open [VIEWER]` | — | Open output after compilation |
-| `--timings [PATH]` | — | Export performance timings as JSON |
+| `--timings <PATH>` | — | Export performance timings as JSON (path required since 0.15) |
 
 ### PDF Standards
 
@@ -128,6 +128,8 @@ typst eval [OPTIONS] <INPUT>
 | `--pretty` | Pretty-print output |
 | `--mode <code\|markup\|math>` | Expression mode (default: code) |
 
+| `--in <FILE>` | Evaluate in the context of a compiled document |
+
 Plus all shared compilation options (`--root`, `--input`, `--font-path`, etc.)
 
 ### Examples
@@ -144,6 +146,10 @@ typst eval expressions.typ
 
 # Pretty-print JSON output
 typst eval --pretty --format json "range(5)"
+
+# Query a document (replaces `typst query`, deprecated in 0.15)
+typst eval 'query(heading).map(h => h.body.text)' --in paper.typ
+typst eval 'query(<abstract>).first().value' --in paper.typ
 ```
 
 ---
@@ -174,69 +180,6 @@ typst init @preview/charged-ieee my-paper
 
 # Initialize with specific version
 typst init @preview/modern-cv:0.7.0 my-resume
-```
-
----
-
-## `typst query`
-
-Extract metadata from a document as JSON or YAML.
-
-```bash
-typst query [OPTIONS] <INPUT> <SELECTOR>
-```
-
-- `<SELECTOR>` — Element selector (e.g., `"<my-label>"`, `heading`)
-
-### Options
-
-| Option | Description |
-|--------|-------------|
-| `--field <FIELD>` | Extract a specific field from elements |
-| `--one` | Expect exactly one result |
-| `--format <json\|yaml>` | Output format (default: json) |
-| `--pretty` | Pretty-print JSON output |
-| `--target <paged\|html>` | Compilation target (default: paged) |
-
-Plus all shared compilation options (`--root`, `--input`, `--font-path`, etc.)
-
-### Examples
-
-```bash
-# Query all headings
-typst query paper.typ heading
-
-# Query a specific labeled element
-typst query paper.typ "<abstract>" --one --pretty
-
-# Extract title field from metadata
-typst query paper.typ "metadata" --field value --one
-```
-
----
-
-## `typst packages`
-
-List installed packages and manage the package cache.
-
-```bash
-typst packages list [OPTIONS]
-typst packages clean [OPTIONS]
-```
-
-| Option | Description |
-|--------|-------------|
-| `--package-path <DIR>` | Custom local packages path |
-| `--package-cache-path <DIR>` | Custom package cache path |
-
-### Examples
-
-```bash
-# List all installed packages
-typst packages list
-
-# Clean the package cache
-typst packages clean
 ```
 
 ---
