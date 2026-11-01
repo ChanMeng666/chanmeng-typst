@@ -137,6 +137,7 @@ Read compilation errors, consult the Recovery Recipes below, fix the `.typ` file
 | `~85%` loses its tilde | `~` is a non-breaking space in markup. Write `\~85%` |
 | Email address breaks the compile | `@` starts a reference in markup. Write `name\@example.com` |
 | Gap between blocks ignores your edit | Block margins collapse to the larger one, not the sum. See `references/typst-pitfalls.md` |
+| A title sits closer to the next line after adding `v()` | `v()` replaces the leading between two lines. Give each line its own block |
 | SVG icon is black despite `text(fill: ...)` | `image()` does not inherit `currentColor`. Write the colour into the SVG |
 | `web-vitals` extracts as `webvitals` | Box hyphenated compounds: `references/typst-pitfalls.md` § Line-end hyphens vanish on extraction |
 | Font not found | Run `typst fonts` to list available fonts; bundle custom fonts with `--font-path ./fonts` |

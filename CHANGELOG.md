@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] — 2026-11-01
+
+### Added
+- `references/typst-pitfalls.md` covers how `v()` replaces the leading between two lines and how a weak `v()` at the end of a block disappears, with measured gaps from Typst 0.14.2 and 0.15.1.
+
 ## [0.5.0] — 2026-11-01
 
 ### Added
