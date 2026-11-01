@@ -50,7 +50,7 @@ Inside Claude Code, run two commands:
 /plugin install chanmeng-typst@chanmeng-typst
 ```
 
-Auto-updates when the plugin's `version` field in `.claude-plugin/plugin.json` bumps. The marketplace name (`chanmeng-typst`) and plugin name (`typst`) are declared in `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` respectively.
+Auto-updates when the plugin's `version` field in `.claude-plugin/plugin.json` bumps. The marketplace name (`chanmeng-typst`) and plugin name (`chanmeng-typst`) are declared in `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json` respectively.
 
 ### Method 2 — Git clone (for users who want to hack on the skill)
 
@@ -63,7 +63,7 @@ git clone --depth 1 https://github.com/ChanMeng666/chanmeng-typst.git /tmp/_typs
   && rm -rf /tmp/_typst-src
 ```
 
-> Windows PowerShell users: replace `~` with `$env:USERPROFILE`, so the destination is `$env:USERPROFILE\.claude\skills\typst`. Use `Move-Item` instead of `mv` and `Remove-Item -Recurse` instead of `rm -rf`.
+> Windows PowerShell users: replace `~` with `$env:USERPROFILE`, so the destination is `$env:USERPROFILE\.claude\skills\chanmeng-typst`. Use `Move-Item` instead of `mv` and `Remove-Item -Recurse` instead of `rm -rf`.
 
 ### Method 3 — Manual ZIP
 
@@ -72,7 +72,7 @@ For users without Git:
 1. Visit [`github.com/ChanMeng666/chanmeng-typst`](https://github.com/ChanMeng666/chanmeng-typst), click **Code → Download ZIP**.
 2. Extract the archive.
 3. Inside the extracted folder, navigate to `skills/chanmeng-typst/` — that subdirectory **is** the skill.
-4. Move and rename `skills/chanmeng-typst/` to `~/.claude/skills/chanmeng-typst` (macOS / Linux) or `%USERPROFILE%\.claude\skills\typst` (Windows).
+4. Move and rename `skills/chanmeng-typst/` to `~/.claude/skills/chanmeng-typst` (macOS / Linux) or `%USERPROFILE%\.claude\skills\chanmeng-typst` (Windows).
 5. Confirm `SKILL.md` exists at the top of that destination folder.
 
 ### Method 4 — Project-level (per-project)
@@ -95,7 +95,7 @@ After installing by **any** method, run the bundled environment check.
 
 For **Method 1** (plugin marketplace), Claude Code installs the plugin to its cache; ask Claude Code:
 
-> Run `bash $CLAUDE_PLUGIN_ROOT/scripts/verify-typst.sh` for the typst plugin.
+> Run `bash $CLAUDE_PLUGIN_ROOT/skills/chanmeng-typst/scripts/verify-typst.sh` for the chanmeng-typst plugin.
 
 For **Methods 2, 3, 4** (skill copied into `~/.claude/skills/chanmeng-typst/` or `.claude/skills/chanmeng-typst/`):
 
@@ -120,7 +120,7 @@ Then ask Claude Code:
 
 > Read `~/.claude/skills/chanmeng-typst/SKILL.md` and tell me the skill name from its YAML frontmatter.
 
-If Claude reports `typst`, the skill is loaded.
+If Claude reports `chanmeng-typst`, the skill is loaded.
 
 ## File Structure
 
@@ -133,7 +133,7 @@ chanmeng-typst/
 │   └── marketplace.json                  # Marketplace catalog
 ├── .github/workflows/validate.yml        # CI: validates frontmatter, compiles examples
 ├── skills/
-│   └── typst/                            # ← THE SKILL ITSELF
+│   └── chanmeng-typst/                   # ← THE SKILL ITSELF
 │       ├── SKILL.md                      # Main skill file (workflow, decision tree, gotchas, recovery)
 │       ├── references/                   # Loaded on demand by Claude Code
 │       │   ├── typst-cli-reference.md
@@ -178,7 +178,7 @@ Once installed, the skill activates automatically when you ask Claude Code to ge
 > Create a presentation about our new product launch
 ```
 
-You can also invoke it explicitly with `/typst`.
+You can also invoke it explicitly with `/chanmeng-typst`.
 
 ## Templates Included
 
@@ -212,7 +212,7 @@ typst compile examples/hello-world.typ
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| Claude Code says "I don't see a Typst skill" | `SKILL.md` missing or in the wrong place | Verify the file exists at `~/.claude/skills/chanmeng-typst/SKILL.md` (or your chosen install path) and that the YAML frontmatter starts with `name: typst` |
+| Claude Code says "I don't see a Typst skill" | `SKILL.md` missing or in the wrong place | Verify the file exists at `~/.claude/skills/chanmeng-typst/SKILL.md` (or your chosen install path) and that the YAML frontmatter starts with `name: chanmeng-typst` |
 | `typst: command not found` | Typst CLI not on PATH | Reinstall via Prerequisites above; on Windows, restart the terminal after `winget install` |
 | `verify-typst.sh: Permission denied` | Script not executable on Linux/macOS | `chmod +x ~/.claude/skills/chanmeng-typst/scripts/verify-typst.sh` |
 | `tofu` (□) glyphs in CJK output | Missing CJK font fallback chain | See SKILL.md § Gotchas; or run `typst fonts` to list installed fonts |

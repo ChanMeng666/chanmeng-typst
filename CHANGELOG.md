@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed (breaking)
+- **Renamed to `chanmeng-typst`**: the repository, plugin, marketplace, and skill directory (`skills/chanmeng-typst/`) now share one name. Install with `/plugin install chanmeng-typst@chanmeng-typst` and invoke with `/chanmeng-typst`. Old GitHub addresses redirect.
+
+### Fixed
+- CI failed after the rename because `validate.yml` still asserted the old `typst` name. It now checks that the skill directory, `SKILL.md` frontmatter, `plugin.json`, and `marketplace.json` agree, so a future rename cannot leave a hard-coded name behind.
+- README: finished the rename in the Windows install paths, the load check, the directory tree, and the troubleshooting table; corrected the plugin path to `verify-typst.sh`.
+
+### CI
+- Pinned Typst to 0.15.1 and derived the cache key from that version (it previously said `v0.14` while installing the latest release).
+- Moved to `actions/checkout@v7` and `actions/cache@v6`, which run on Node.js 24.
+
 ## [0.3.0] — 2026-04-29
 
 ### Changed (breaking for direct-clone users)
