@@ -2,10 +2,20 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.0] — 2026-11-01
 
 ### Changed (breaking)
 - **Renamed to `chanmeng-typst`**: the repository, plugin, marketplace, and skill directory (`skills/chanmeng-typst/`) now share one name. Install with `/plugin install chanmeng-typst@chanmeng-typst` and invoke with `/chanmeng-typst`. Old GitHub addresses redirect.
+
+### Migration for existing users
+- **Plugin installs:** the plugin and marketplace were both renamed, so remove the old install and add the new one:
+  ```
+  /plugin uninstall typst@chan-typst
+  /plugin marketplace remove chan-typst
+  /plugin marketplace add ChanMeng666/chanmeng-typst
+  /plugin install chanmeng-typst@chanmeng-typst
+  ```
+- **Copied skills:** replace `~/.claude/skills/typst/` with `~/.claude/skills/chanmeng-typst/`, using the install steps in the README.
 
 ### Fixed
 - CI failed after the rename because `validate.yml` still asserted the old `typst` name. It now checks that the skill directory, `SKILL.md` frontmatter, `plugin.json`, and `marketplace.json` agree, so a future rename cannot leave a hard-coded name behind.
