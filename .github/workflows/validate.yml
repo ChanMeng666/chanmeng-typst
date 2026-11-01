@@ -5,43 +5,52 @@ on:
     branches: [master, main]
   pull_request:
 
+env:
+  # Bump deliberately: this also rolls the cache key below.
+  TYPST_VERSION: 0.15.1
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Cache cargo / typst-cli
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/bin/typst
             ~/.cargo/registry
-          key: ${{ runner.os }}-typst-cli-v0.14
+          key: ${{ runner.os }}-typst-cli-${{ env.TYPST_VERSION }}
 
       - name: Install Typst CLI (if not cached)
         run: |
           if ! command -v typst >/dev/null; then
-            cargo install --locked typst-cli
+            cargo install --locked typst-cli --version "$TYPST_VERSION"
           fi
           typst --version
 
       - name: Validate SKILL.md frontmatter
         run: |
           set -e
-          head -20 skills/chanmeng-typst/SKILL.md | grep -E '^name: typst$' >/dev/null
-          head -20 skills/chanmeng-typst/SKILL.md | grep -E '^description: ' >/dev/null
-          head -20 skills/chanmeng-typst/SKILL.md | grep -E '^allowed-tools: ' >/dev/null
+          for skill in skills/*/SKILL.md; do
+            name=$(basename "$(dirname "$skill")")
+            if ! head -20 "$skill" | grep -Fx "name: $name" >/dev/null; then
+              echo "::error file=$skill::frontmatter name must match directory name '$name'"
+              exit 1
+            fi
+            head -20 "$skill" | grep -E '^description: ' >/dev/null
+            head -20 "$skill" | grep -E '^allowed-tools: ' >/dev/null
+          done
           echo "SKILL.md frontmatter OK"
 
       - name: Validate plugin.json
         run: |
-          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
-          python3 -c "import json; m=json.load(open('.claude-plugin/plugin.json')); assert m['name']=='typst', 'plugin name mismatch'; print('plugin.json OK')"
+          python3 -c "import json,os; n=json.load(open('.claude-plugin/plugin.json'))['name']; assert os.path.isfile(f'skills/{n}/SKILL.md'), f'no skills/{n}/SKILL.md for plugin name {n}'; print('plugin.json OK')"
 
       - name: Validate marketplace.json
         run: |
-          python3 -c "import json; m=json.load(open('.claude-plugin/marketplace.json')); assert 'plugins' in m and len(m['plugins'])>=1, 'plugins array missing'; print('marketplace.json OK')"
+          python3 -c "import json; m=json.load(open('.claude-plugin/marketplace.json')); n=json.load(open('.claude-plugin/plugin.json'))['name']; assert n in [p['name'] for p in m.get('plugins',[])], f'plugin {n} not listed in marketplace.json'; print('marketplace.json OK')"
 
       - name: Compile every example
         run: |
