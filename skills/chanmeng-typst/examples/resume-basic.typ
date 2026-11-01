@@ -1,7 +1,7 @@
 // Basic resume — compile with: typst compile resume-basic.typ
 #set document(title: "Resume", author: "Jane Doe")
 #set page(paper: "a4", margin: (top: 2cm, bottom: 2cm, left: 2.5cm, right: 2.5cm))
-#set text(font: "Linux Libertine", size: 10pt)
+#set text(font: "Libertinus Serif", size: 10pt)
 #set par(justify: true, leading: 0.7em)
 
 // Helper: section heading with a line

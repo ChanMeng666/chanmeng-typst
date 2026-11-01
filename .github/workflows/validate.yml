@@ -30,6 +30,9 @@ jobs:
           fi
           typst --version
 
+      - name: Install poppler
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
       - name: Validate SKILL.md frontmatter
         run: |
           set -e
@@ -61,6 +64,16 @@ jobs:
             typst compile "$f" "/tmp/typst-out/$(basename "$f" .typ).pdf"
           done
           ls -la /tmp/typst-out
+
+      - name: Compile every template in the references
+        run: python3 .github/scripts/compile-templates.py
+
+      - name: Check the ATS example with check-pdf.py
+        run: |
+          python3 skills/chanmeng-typst/scripts/check-pdf.py /tmp/typst-out/resume-ats.pdf \
+            --source skills/chanmeng-typst/examples/resume-ats.typ \
+            --ats --pages 1 \
+            --require "Alex Rivera" "alex.rivera@example.com" "multi-tenant" "open-source" "~35%"
 
       - name: Run verify-typst.sh
         run: bash skills/chanmeng-typst/scripts/verify-typst.sh

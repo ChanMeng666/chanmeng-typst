@@ -12,8 +12,11 @@ When installed, Claude Code can create PDFs, reports, academic papers, resumes, 
 ## Features
 
 - **Full Typst language coverage** — page setup, text formatting, math equations, tables, figures, layout, scripting, show/set rules, introspection, and more
-- **Complete CLI reference** — all commands (`compile`, `watch`, `init`, `query`, `fonts`), options, and environment variables for Typst v0.14
+- **Complete CLI reference** — all commands (`compile`, `watch`, `eval`, `init`, `fonts`), options, and environment variables for Typst v0.15
 - **9 ready-to-use templates** — general document, CJK document, academic paper, simple resume, typographic two-column resume, letter, technical report, presentation slides, and invoice
+- **Verified output** — `scripts/check-pdf.py` and a render step catch what a clean compile misses: wrong page count, lost hyphens, unembedded fonts, untagged PDFs
+- **Silent pitfalls** — a reference of layout and text bugs the compiler does not report, each reproduced on Typst 0.15.1
+- **ATS-safe resumes** — rules, a fictional example, and a `--ats` check for resumes read by job-portal parsers
 - **Advanced design patterns** — theme systems with cascading defaults, scope-based show rules, modular component functions, multi-column layouts, circular image clipping, typography hierarchy
 - **CJK support** — font fallback configuration, `cjk-latin-spacing`, and proper paragraph settings for Chinese/Japanese/Korean documents
 - **PDF capabilities** — PDF/A standards, tagged PDF for accessibility, ICC color profiles, reproducible builds
@@ -35,7 +38,7 @@ brew install typst
 cargo install --locked typst-cli
 ```
 
-Verify with `typst --version` (should print v0.14 or newer).
+Verify with `typst --version` (should print v0.14 or newer; tested on v0.15.1). Optionally install [poppler](https://poppler.freedesktop.org/), which `scripts/check-pdf.py` needs.
 
 ## Installation
 
@@ -131,7 +134,9 @@ chanmeng-typst/
 ├── .claude-plugin/
 │   ├── plugin.json                       # Plugin manifest (used by Method 1)
 │   └── marketplace.json                  # Marketplace catalog
-├── .github/workflows/validate.yml        # CI: validates frontmatter, compiles examples
+├── .github/
+│   ├── workflows/validate.yml            # CI: validates metadata, compiles examples and templates
+│   └── scripts/compile-templates.py      # Compiles every template in the references
 ├── skills/
 │   └── chanmeng-typst/                   # ← THE SKILL ITSELF
 │       ├── SKILL.md                      # Main skill file (workflow, decision tree, gotchas, recovery)
@@ -139,13 +144,18 @@ chanmeng-typst/
 │       │   ├── typst-cli-reference.md
 │       │   ├── typst-language-reference.md
 │       │   ├── typst-templates.md
-│       │   └── typst-design-patterns.md
+│       │   ├── typst-design-patterns.md
+│       │   ├── typst-pitfalls.md         # Bugs the compiler does not report
+│       │   └── ats-resume.md             # Resumes read by machines
 │       ├── scripts/
-│       │   └── verify-typst.sh           # Environment verification
+│       │   ├── verify-typst.sh           # Environment verification
+│       │   └── check-pdf.py              # Post-compile output checks
+│       ├── evals/                        # Test cases for the skill
 │       └── examples/
 │           ├── hello-world.typ
 │           ├── cjk-document.typ
-│           └── resume-basic.typ
+│           ├── resume-basic.typ
+│           └── resume-ats.typ
 ├── README.md
 ├── CHANGELOG.md
 └── LICENSE

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: typographic-cv-from-template
+expected_outcome: |
+  cv.pdf is a well-spaced one-page two-column CV built from the skill template.

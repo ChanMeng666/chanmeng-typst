@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: designed-cv-two-page-budget
+expected_outcome: |
+  cv.pdf is exactly two pages, with accent-coloured icons and an intact pull quote.
+context:
+  scaffold_script: place-files.sh

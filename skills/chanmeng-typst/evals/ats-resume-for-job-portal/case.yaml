@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: ats-resume-for-job-portal
+expected_outcome: |
+  resume.pdf is one column, has no images, and extracts every fact with hyphens and tildes intact.

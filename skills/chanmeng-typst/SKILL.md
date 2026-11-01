@@ -7,22 +7,27 @@ description: >
   cover letter / letter / invoice / thesis / handout / poster — even when
   they do not say "Typst" explicitly. Especially trigger when the user
   mentions one-page CV, two-column resume, academic paper with bibliography,
-  or any CJK (Chinese / Japanese / Korean) document.
+  an ATS-friendly resume for a job portal, or any CJK (Chinese / Japanese /
+  Korean) document, including requests such as 简历, 学术论文, 报告, 发票 or
+  幻灯片. Also use when editing an existing .typ file, or when a Typst PDF has
+  the wrong page count, spacing, fonts or extracted text.
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
 # Typst Document Generation Skill
 
-> **Trigger me when** the user wants any of: PDF · CV · résumé · cover letter · academic paper · report · invoice · slides · poster · 简历 · 学术论文 · 报告 · 发票 · 幻灯片 · Typst — even if they did not say "Typst" explicitly.
+You are an expert Typst typesetter. Generate professional PDF, PNG, SVG, or HTML documents using Typst. This skill is written for Typst 0.14+ and tested on 0.15.1.
 
-You are an expert Typst typesetter. Generate professional PDF, PNG, SVG, or HTML documents using Typst.
+A clean compile is where the work starts to be checked, not where it ends: many layout and text bugs produce no error or warning. Step 4 of the Workflow is what catches them.
 
 ## Decision Tree — pick a template before writing
 
 Ask, in this order, before writing any `.typ`:
 
 1. **What is the artefact?**
-   - Resume / CV → `references/typst-templates.md` § Simple Resume or Typographic Resume
+   - Resume / CV → ask where it is going if the user has not said.
+     - Uploaded to a job portal or applicant tracking system → `references/ats-resume.md` and `examples/resume-ats.typ`
+     - Read directly by a person → `references/typst-templates.md` § 4a Simple or § 4b Typographic Two-Column
    - Cover letter / formal letter → § Letter
    - Academic / research paper → § Academic Paper (two-column, abstract, bibliography)
    - Internal report / whitepaper → § Technical Report
@@ -36,6 +41,14 @@ Ask, in this order, before writing any `.typ`:
 3. **Does the user have a JSON / CSV data source?**
    If yes, generate a `.typ` that calls `#let data = json("path.json")` (or `csv(...)`) and loops over it — do **not** hardcode values from the data into the template.
 
+4. **Is it dense, page-limited, or read by a machine?**
+   If yes, read `references/typst-pitfalls.md` before tuning layout.
+
+5. **Will it be maintained or reused?**
+   If yes, set it up as a project with shared tokens and components: `references/typst-design-patterns.md` § Long-Lived Document Projects.
+
+Use only facts the user gave you in resumes, letters and reports. Where something is missing, ask or leave a visible placeholder, because an invented metric or date is hard to spot once typeset.
+
 ## Quick Reference
 
 | Task | Code / Command |
@@ -44,14 +57,14 @@ Ask, in this order, before writing any `.typ`:
 | Compile to PNG | `typst compile doc.typ --format png --ppi 300` |
 | Compile & open | `typst compile doc.typ --open` |
 | Set page | `#set page(paper: "a4", margin: 2.5cm)` |
-| Set font | `#set text(font: "Linux Libertine", size: 11pt)` |
+| Set font | `#set text(font: "Libertinus Serif", size: 11pt)` |
 | CJK font | `#set text(lang: "zh", font: ("Source Han Serif SC", "SimSun", "Microsoft YaHei"))` |
 | Heading | `= Title` / `== Subtitle` / `=== Sub-subtitle` |
 | Math | `$ integral_0^infinity e^(-x^2) dif x = sqrt(pi) / 2 $` |
 | Import package | `#import "@preview/cetz:0.3.4": canvas, draw` |
 | Load data | `#let data = json("data.json")` or `csv("data.csv")` |
 | Evaluate expression | `typst eval "1 + 2"` |
-| Conditional format | `#if target() == "html" { ... } else { ... }` |
+| Conditional format | `#context if target() == "html" { ... } else { ... }` |
 | List fonts | `typst fonts` |
 
 ## Workflow
@@ -91,16 +104,41 @@ typst compile document.typ output.svg               # SVG
 
 See `references/typst-cli-reference.md` for all options.
 
-### 4. Iterate
+Check the exit code, because a failed compile leaves any previous PDF in place. Treat `unknown font family` as a problem to fix: the fallback font changes line breaks and page count.
 
-Read compilation errors, consult the Recovery Recipes below, fix the `.typ` file, and recompile.
+### 4. Verify the output
+
+Do this before telling the user the document is done.
+
+**Look at it.** Render the pages and read each image, since spacing, overflow, orphaned lines and wrong icon colours only show on a render:
+
+```bash
+typst compile document.typ "page-{p}.png" --ppi 150
+```
+
+**Check it.** Run the bundled checker. It needs poppler, and reports page count, font embedding, text extraction, lost hyphens and bare `~`:
+
+```bash
+python scripts/check-pdf.py document.pdf --source document.typ --pages 2
+```
+
+Pass `--pages N` when the user gave a page limit, `--ats` for a job-portal resume, and `--require "text" ...` for facts that must survive extraction, such as names, dates and contact details. If poppler is missing and cannot be installed, say which checks were skipped.
+
+### 5. Iterate
+
+Read compilation errors, consult the Recovery Recipes below, fix the `.typ` file, recompile, and repeat Step 4. Re-check the page count after every layout change.
 
 ## Gotchas / Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
 | CJK glyphs missing or tofu (□) | Set `lang` AND provide a CJK font fallback chain: `#set text(lang: "zh", font: ("Source Han Serif SC", "SimSun"))` |
-| Windows path errors in `#image()` / `#include()` | Use forward slashes: `image("images/photo.jpg")`, not backslashes |
+| Windows path errors in `#image()` / `#include()` | Use forward slashes: `image("images/photo.jpg")`. Backslashes are an error since 0.15 |
+| `~85%` loses its tilde | `~` is a non-breaking space in markup. Write `\~85%` |
+| Email address breaks the compile | `@` starts a reference in markup. Write `name\@example.com` |
+| Gap between blocks ignores your edit | Block margins collapse to the larger one, not the sum. See `references/typst-pitfalls.md` |
+| SVG icon is black despite `text(fill: ...)` | `image()` does not inherit `currentColor`. Write the colour into the SVG |
+| `web-vitals` extracts as `webvitals` | Box hyphenated compounds: `references/typst-pitfalls.md` § Line-end hyphens vanish on extraction |
 | Font not found | Run `typst fonts` to list available fonts; bundle custom fonts with `--font-path ./fonts` |
 | `context` errors in Typst v0.14+ | Accessing `counter()`, `state()`, or `text.fill` requires wrapping in a `context` block |
 | `show` rules leaking to other sections | Wrap scoped show rules in a block `{ ... }` to limit their effect |
@@ -117,6 +155,10 @@ When `typst compile` fails, paste stderr's first line into this lookup before gu
 | stderr starts with | Most likely cause | First thing to try |
 |--------------------|-------------------|--------------------|
 | `error: file not found (...) image(...)` | wrong relative path | `cd` to the `.typ` file's directory; use forward slashes |
+| `error: path must not contain a backslash` | Windows-style path | use forward slashes |
+| `error: path ... would escape the project root` | file sits outside `--root` | pass a higher `--root`, or move the file inside it |
+| ``error: label `<...>` does not exist in the document`` | bare `@` in markup, often an email address | escape it as `\@`, or define the label |
+| `error: expected integer, found string` on `.at("key")` | `()` is an empty array, not a dictionary | use `(:)` as the default value |
 | `error: unknown variable: <name>` | typo or missing `#let <name>` | grep the file for the symbol; check that imports use the right alias |
 | `error: failed to load package` | offline / firewall blocks `@preview` | retry with internet; or vendor the package locally and import by path |
 | `error: cannot apply fill to ... (context error)` | v0.14 introspection requires `context` | wrap the access in `context { ... }` |
@@ -138,7 +180,9 @@ Read these files on demand (not all at once):
 | CLI Reference | `references/typst-cli-reference.md` | All CLI commands, options, environment variables |
 | Language Reference | `references/typst-language-reference.md` | Complete syntax, functions, and features |
 | Templates | `references/typst-templates.md` | Ready-to-use templates (general, CJK, academic, resume, letter, report, slides, invoice) |
-| Design Patterns | `references/typst-design-patterns.md` | Advanced patterns (themes, layouts, components, PDF capabilities) |
+| Design Patterns | `references/typst-design-patterns.md` | Advanced patterns (project layout, themes, components, PDF capabilities) |
+| Pitfalls | `references/typst-pitfalls.md` | Bugs the compiler does not report: spacing, lost text, icons, fonts, page budgets |
+| ATS Resumes | `references/ats-resume.md` | Rules, skeleton and verification for resumes read by machines |
 
 ## Output Formats
 

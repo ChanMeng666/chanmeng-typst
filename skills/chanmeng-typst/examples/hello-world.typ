@@ -1,7 +1,7 @@
 // Minimal Typst document — compile with: typst compile hello-world.typ
 #set document(title: "Hello World", author: "Author")
 #set page(paper: "a4", margin: 2.5cm)
-#set text(font: "Linux Libertine", size: 11pt)
+#set text(font: "Libertinus Serif", size: 11pt)
 #set heading(numbering: "1.1")
 #set par(justify: true, leading: 0.8em)
 

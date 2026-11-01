@@ -1,4 +1,4 @@
-# Typst Language Reference (v0.14)
+# Typst Language Reference (v0.15)
 
 Complete reference for the Typst typesetting language.
 
@@ -114,7 +114,7 @@ def hello():
 
 ```typst
 #set text(
-  font: "Linux Libertine",        // Font family (or array for fallback)
+  font: "Libertinus Serif",        // Font family (or array for fallback)
   size: 11pt,                      // Font size
   fill: black,                     // Text color
   lang: "en",                      // Language (affects hyphenation)
@@ -213,7 +213,7 @@ $ f(x) = cases(
 ) $
 
 // Delimiters
-$ lr(angle.l a, b angle.r) $
+$ lr(chevron.l a, b chevron.r) $
 $ abs(x) $
 $ norm(x) $
 $ floor(x) $
@@ -542,7 +542,7 @@ gradient.conic(red, yellow, green, blue)
 #arr.filter(x => x > 2)     // (3, 4, 5)
 #arr.map(x => x * 2)        // (2, 4, 6, 8, 10)
 #arr.fold(0, (acc, x) => acc + x)  // 15
-#arr.join(", ")     // "1, 2, 3, 4, 5"
+#arr.map(str).join(", ")  // "1, 2, 3, 4, 5"
 #arr.sorted()       // sorted copy
 #arr.rev()          // reversed copy
 #arr.enumerate()    // ((0,1), (1,2), ...)
@@ -849,7 +849,7 @@ Install by importing: `#import "@preview/package:version": ...`
 #sys.version
 
 // Detect export target for conditional rendering
-#if target() == "html" {
+#context if target() == "html" {
   [HTML-specific content]
 } else {
   [PDF-specific content]
