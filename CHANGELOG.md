@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `CLAUDE.md` records the current state, checks, release steps, Typst upgrade steps and known limits.
+
 ## [0.6.0] — 2026-11-01
 
 Audited against the full Typst 0.15.0 and 0.15.1 release notes, the commits after 0.15.1, and the official accessibility guide.

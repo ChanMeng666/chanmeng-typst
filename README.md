@@ -111,7 +111,7 @@ Expected output:
 
 ```
 === Typst Environment Check ===
-[PASS] Typst found: typst 0.14.x
+[PASS] Typst found: typst 0.15.1
 [PASS] Current directory is writable
 --- Available CJK Fonts ---
 [PASS] CJK fonts found:
