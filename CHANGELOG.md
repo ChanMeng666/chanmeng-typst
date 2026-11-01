@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] — 2026-11-01
+
+Audited against the full Typst 0.15.0 and 0.15.1 release notes, the commits after 0.15.1, and the official accessibility guide.
+
+### Fixed
+- CJK template and example: SimSun, SimHei and KaiTi have no bold or italic face, so bold and headings looked like body text. Bold, headings and emphasis now map to fonts that show a difference.
+- CJK template and example: `first-line-indent: 2em` skipped the first paragraph after a heading. They now use `(amount: 2em, all: true)`.
+- Packages: updated `cetz` to 0.5.3 and `modern-cv` to 0.10.0, and replaced the unmaintained `tablex` with the native `table`.
+- CLI reference: added `typst eval --target`, the `typst update` options, the `bundle` feature, and combined PDF standards.
+
+### Added
+- `references/typst-pitfalls.md` gains a CJK text section, covering fonts with no bold, source line breaks that add a space, first-paragraph indents, `一、` numbering, and Latin fonts taking Chinese punctuation.
+- `scripts/check-pdf.py` warns about line breaks between CJK characters and about bold in a font with no bold face, lists the fonts used, and matches `--require` text across wrapped CJK lines.
+- `references/typst-design-patterns.md` gains sections on accessible PDFs and experimental bundle export.
+- `references/typst-language-reference.md` gains a section on features added in 0.15, including renamed citation styles.
+- CI compiles the ATS example as PDF/UA-1.
+- `evals/` gains a Chinese report test case.
+
 ## [0.5.1] — 2026-11-01
 
 ### Added

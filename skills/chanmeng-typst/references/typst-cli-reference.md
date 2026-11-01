@@ -42,7 +42,7 @@ typst compile [OPTIONS] <INPUT> [OUTPUT]
 | `--deps <PATH>` | — | Write compilation dependencies |
 | `--deps-format <FMT>` | — | Dependencies format: `json`, `zero`, `make` |
 | `-j, --jobs <N>` | — | Parallel compilation jobs |
-| `--features <FEAT>` | `TYPST_FEATURES` | Enable experimental features: `html`, `a11y-extras` |
+| `--features <FEAT>` | `TYPST_FEATURES` | Enable experimental features: `html`, `bundle`, `a11y-extras` |
 | `--diagnostic-format <FMT>` | — | Diagnostic format: `human`, `short` |
 | `--open [VIEWER]` | — | Open output after compilation |
 | `--timings <PATH>` | — | Export performance timings as JSON (path required since 0.15) |
@@ -65,6 +65,9 @@ typst compile paper.typ --pages 1,3-5
 
 # PDF/A-2b compliance
 typst compile paper.typ --pdf-standard a-2b
+
+# Several compatible standards at once
+typst compile paper.typ --pdf-standard a-2a,ua-1
 
 # Multi-page PNG with zero-padded names
 typst compile paper.typ "page-{0p}-of-{t}.png"
@@ -128,9 +131,12 @@ typst eval [OPTIONS] <INPUT>
 | `--pretty` | Pretty-print output |
 | `--mode <code\|markup\|math>` | Expression mode (default: code) |
 
-| `--in <FILE>` | Evaluate in the context of a compiled document |
+| `--in <FILE>` | Evaluate in the context of a compiled document; `-` reads stdin |
+| `--target <paged\|html>` | Target to compile for (default: paged) |
 
 Plus all shared compilation options (`--root`, `--input`, `--font-path`, etc.)
+
+Since 0.15.1, `typst eval` exits with code 1 when the expression fails.
 
 ### Examples
 
@@ -179,7 +185,7 @@ typst init [OPTIONS] <TEMPLATE> [DIR]
 typst init @preview/charged-ieee my-paper
 
 # Initialize with specific version
-typst init @preview/modern-cv:0.7.0 my-resume
+typst init @preview/modern-cv:0.10.0 my-resume
 ```
 
 ---
@@ -221,6 +227,14 @@ Self-update the Typst CLI.
 ```bash
 typst update [OPTIONS] [VERSION]
 ```
+
+| Option | Description |
+|--------|-------------|
+| `--force` | Allow downgrading to an older version |
+| `--revert` | Return to the version before the last update |
+| `--backup-path <FILE>` | Custom path for the backup that `--revert` uses |
+
+If a package manager installed Typst, update through it instead: `winget upgrade --id Typst.Typst` or `brew upgrade typst`.
 
 ---
 

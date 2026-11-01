@@ -18,7 +18,7 @@ When installed, Claude Code can create PDFs, reports, academic papers, resumes, 
 - **Silent pitfalls** — a reference of layout and text bugs the compiler does not report, each reproduced on Typst 0.15.1
 - **ATS-safe resumes** — rules, a fictional example, and a `--ats` check for resumes read by job-portal parsers
 - **Advanced design patterns** — theme systems with cascading defaults, scope-based show rules, modular component functions, multi-column layouts, circular image clipping, typography hierarchy
-- **CJK support** — font fallback configuration, `cjk-latin-spacing`, and proper paragraph settings for Chinese/Japanese/Korean documents
+- **CJK support** — bold mapping for fonts with no bold face, correct first-paragraph indents, and font fallback configuration, `cjk-latin-spacing`, and proper paragraph settings for Chinese/Japanese/Korean documents
 - **PDF capabilities** — PDF/A standards, tagged PDF for accessibility, ICC color profiles, reproducible builds
 - **Package publishing** — `typst.toml` manifest format, directory structure, and font bundling
 - **Plugin packaging** — installable as a Claude Code plugin (with marketplace) **or** dropped directly into `~/.claude/skills/`

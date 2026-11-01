@@ -73,6 +73,8 @@ python scripts/check-pdf.py resume.pdf --source resume.typ --ats --pages 2 \
   --require "Your Name" "you@example.com" "Senior Engineer"
 ```
 
+Compiling with `--pdf-standard ua-1` adds a stricter structural check, and stops on problems such as a missing title.
+
 `--require` takes the facts that must survive extraction: name, email, phone, each employer and each job title. With `--ats`, the script fails on images, grids, a `/Keywords` entry, missing dates or untagged output. Then read `pdftotext -layout resume.pdf -` as a parser would, and render the pages to PNG to check the hairlines and spacing.
 
 ## Limits of PDF checks

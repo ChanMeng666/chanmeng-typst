@@ -1,6 +1,6 @@
 # Typst Pitfalls the Compiler Will Not Tell You About
 
-A clean `typst compile` proves the source is valid, not that the document is right. Most entries here produced a PDF with no error at all and only showed up on a page render or a text extraction. Each was reproduced on Typst 0.15.1 with poppler 26.02.
+A clean `typst compile` proves the source is valid, not that the document is right. Most entries here produced a PDF with no error at all and only showed up on a page render or a text extraction. Each was reproduced on Typst 0.15.1 with poppler 26.02, and the CJK entries were also checked on rendered pages.
 
 Read this before tuning the layout of a dense document (CV, one-pager, report), and before any document that a machine will read.
 
@@ -9,6 +9,7 @@ Read this before tuning the layout of a dense document (CV, one-pager, report), 
 - [Spacing and layout](#spacing-and-layout)
 - [Text that changes or disappears](#text-that-changes-or-disappears)
 - [Images and icons](#images-and-icons)
+- [CJK text](#cjk-text)
 - [Fonts](#fonts)
 - [Build and metadata](#build-and-metadata)
 - [Fitting a page budget](#fitting-a-page-budget)
@@ -121,11 +122,57 @@ Plain `pdftotext` keeps grid cells in order, but layout-preserving extraction (`
 sed 's/currentColor/#0B5FFF/g' icon.svg > icon-blue.svg
 ```
 
+## CJK text
+
+### Some Chinese fonts have no bold or italic
+
+SimSun, SimHei and KaiTi ship one weight and no italic. With them, `*bold*`, `_emphasis_` and headings look exactly like body text, with no warning. Map those styles to fonts that have a visible difference:
+
+```typst
+#show strong: set text(font: ("Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei"))
+#show emph: set text(font: ("Kaiti SC", "KaiTi"), style: "normal")
+```
+
+Check the result on a render. `pdffonts` should list more than one font when the document uses bold.
+
+### A source line break adds a space
+
+In Typst 0.15.1, a line break in the source between two Chinese or Japanese characters renders as a visible space, and that space is also in the extracted text. Keep each paragraph on one source line. A fix is on Typst's development branch but not yet released, so re-check this after upgrading.
+
+### The first paragraph is not indented
+
+`first-line-indent: 2em` skips the first paragraph after a heading, which suits Western typography. Chinese expects every paragraph to be indented:
+
+```typst
+#set par(first-line-indent: (amount: 2em, all: true))
+```
+
+### Numbering such as `一、` gets an extra space
+
+`#set heading(numbering: "一、")` places a space after the number, which looks too wide next to the `、`. Draw the heading yourself to remove it:
+
+```typst
+#set heading(numbering: "一、")
+#show heading: it => block(counter(heading).display(it.numbering) + it.body)
+```
+
+### Latin fonts can take Chinese punctuation
+
+With a Latin font first in the chain, Chinese quotation marks come from that font and look narrow. Use `covers` so it only handles Latin text:
+
+```typst
+#set text(font: ((name: "Times New Roman", covers: "latin-in-cjk"), "SimSun"))
+```
+
 ## Fonts
 
 ### Do not ignore `unknown font family`
 
 This warning means Typst fell back to another font. The document still compiles, but metrics change, so line breaks and page count change too. Typst's bundled fonts are Libertinus Serif, New Computer Modern and DejaVu Sans Mono. `Linux Libertine` was renamed and no longer exists.
+
+The exception is a fallback chain written to work across systems, where missing names are expected. Then confirm with `pdffonts` that the document used the fonts you meant.
+
+For a variable font, use the family name without "Variable", "Var" or "VF". On Windows, `Segoe UI Variable` is an unknown family, while `Segoe UI` works.
 
 For a document that must look the same everywhere, keep the fonts with the project and compile against them:
 

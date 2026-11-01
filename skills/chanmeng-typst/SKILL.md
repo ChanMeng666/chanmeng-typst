@@ -36,7 +36,7 @@ Ask, in this order, before writing any `.typ`:
    - Anything else → § General Document
 
 2. **Is the language CJK (Chinese / Japanese / Korean)?**
-   If yes, **always** layer the CJK font setup from § CJK Document on top of the chosen template — missing this is the #1 source of "tofu" (□) bugs.
+   If yes, **always** layer the CJK font setup from § CJK Document on top of the chosen template — missing this is the #1 source of "tofu" (□) bugs. Then read `references/typst-pitfalls.md` § CJK text, because system fonts without bold and source line breaks cause problems that no error reports.
 
 3. **Does the user have a JSON / CSV data source?**
    If yes, generate a `.typ` that calls `#let data = json("path.json")` (or `csv(...)`) and loops over it — do **not** hardcode values from the data into the template.
@@ -58,10 +58,10 @@ Use only facts the user gave you in resumes, letters and reports. Where somethin
 | Compile & open | `typst compile doc.typ --open` |
 | Set page | `#set page(paper: "a4", margin: 2.5cm)` |
 | Set font | `#set text(font: "Libertinus Serif", size: 11pt)` |
-| CJK font | `#set text(lang: "zh", font: ("Source Han Serif SC", "SimSun", "Microsoft YaHei"))` |
+| CJK font | `#set text(lang: "zh", font: ("Source Han Serif SC", "Noto Serif CJK SC", "SimSun"))` |
 | Heading | `= Title` / `== Subtitle` / `=== Sub-subtitle` |
 | Math | `$ integral_0^infinity e^(-x^2) dif x = sqrt(pi) / 2 $` |
-| Import package | `#import "@preview/cetz:0.3.4": canvas, draw` |
+| Import package | `#import "@preview/cetz:0.5.3": canvas, draw` |
 | Load data | `#let data = json("data.json")` or `csv("data.csv")` |
 | Evaluate expression | `typst eval "1 + 2"` |
 | Conditional format | `#context if target() == "html" { ... } else { ... }` |
@@ -86,6 +86,8 @@ If `typst` is not installed:
 - Windows: `winget install --id Typst.Typst`
 - macOS: `brew install typst`
 - Any platform with Rust: `cargo install --locked typst-cli`
+
+To update an existing install, use `winget upgrade --id Typst.Typst`, `brew upgrade typst`, or `typst update` for a standalone binary.
 
 ### 2. Create the `.typ` source file
 
@@ -133,6 +135,9 @@ Read compilation errors, consult the Recovery Recipes below, fix the `.typ` file
 | Mistake | Fix |
 |---------|-----|
 | CJK glyphs missing or tofu (□) | Set `lang` AND provide a CJK font fallback chain: `#set text(lang: "zh", font: ("Source Han Serif SC", "SimSun"))` |
+| Chinese `*bold*` looks like body text | SimSun, SimHei and KaiTi have no bold face. Map `strong` to a font that does |
+| Stray space between Chinese characters | A source line break becomes a space. Keep each paragraph on one line |
+| First Chinese paragraph is not indented | Use `first-line-indent: (amount: 2em, all: true)` |
 | Windows path errors in `#image()` / `#include()` | Use forward slashes: `image("images/photo.jpg")`. Backslashes are an error since 0.15 |
 | `~85%` loses its tilde | `~` is a non-breaking space in markup. Write `\~85%` |
 | Email address breaks the compile | `@` starts a reference in markup. Write `name\@example.com` |
@@ -193,3 +198,4 @@ Read these files on demand (not all at once):
 | PNG | `.png` | One image per page. Use `--ppi` for resolution (default 144). |
 | SVG | `.svg` | One file per page. Vector graphics. |
 | HTML | `.html` | Experimental. Use `--features html`. |
+| Bundle | folder | Experimental. Several files from one source: `--features bundle --format bundle`. |

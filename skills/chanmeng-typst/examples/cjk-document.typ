@@ -1,19 +1,21 @@
 // CJK (Chinese) document — compile with: typst compile cjk-document.typ
 #set document(title: "中文文档示例", author: "作者")
 #set page(paper: "a4", margin: 2.5cm)
-// Font fallback chain — `SimSun` (Windows native) first so the most common
-// student setup compiles with the OS-default serif as the actual rendered
-// font. Typst still emits one warning per font name it cannot locate on
-// the host machine, but those are informational ("this font is missing,
-// trying the next one"); the PDF is valid as long as ONE name in the
-// chain matches.
-#set text(
-  lang: "zh",
-  font: ("SimSun", "Microsoft YaHei", "Source Han Serif SC", "Noto Serif CJK SC"),
-  size: 11pt,
-)
+// Each chain lists Adobe, Google, macOS and Windows fonts, so it works on any of
+// them. Typst warns once for each name it cannot find. That is expected here, as
+// long as `pdffonts` shows the fonts you meant to use.
+// Many Chinese system fonts (SimSun, SimHei, KaiTi) have no bold or italic face,
+// so *bold* would look like body text. Bold uses a sans font and italics use Kai.
+#let cjk-serif = ("Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "SimSun")
+#let cjk-sans = ("Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei")
+#let cjk-kai = ("Kaiti SC", "KaiTi")
+#set text(lang: "zh", region: "cn", font: cjk-serif, size: 11pt)
 #set heading(numbering: "1.1")
-#set par(justify: true, leading: 1em, first-line-indent: 2em)
+// `all: true` also indents the first paragraph after a heading, as Chinese expects.
+#set par(justify: true, leading: 1em, first-line-indent: (amount: 2em, all: true))
+#show strong: set text(font: cjk-sans)
+#show emph: set text(font: cjk-kai, style: "normal")
+#show heading: set text(font: cjk-sans, weight: "bold")
 
 = 文档标题
 
@@ -21,7 +23,9 @@
 
 == 字体说明
 
-本文档的字体回退链以 Windows 原生 *宋体（SimSun）* 起头，依次回退到微软雅黑、思源宋体（Source Han Serif SC）和 Noto Serif CJK SC。Typst 会对回退链里没装上的字体名各发一条 `unknown font family` 提示——这是说明性信息，只要链里有任意一个字体被识别到，PDF 就能正常输出。Mac 学员可以把回退链头部换成 Songti SC，Linux 学员可以换成 Noto Serif CJK SC。
+宋体和黑体等系统字体没有粗体和斜体字重，所以本模板把 *粗体* 映射到无衬线字体，把 _强调_ 映射到楷体。Typst 会对回退链里没装上的字体名各发一条 `unknown font family` 提示，只要用 `pdffonts` 确认实际用到的字体符合预期即可。
+
+中文段落请写在同一行源码里，因为源码换行会在两个汉字之间留下一个可见的空格。
 
 == 数学公式
 
