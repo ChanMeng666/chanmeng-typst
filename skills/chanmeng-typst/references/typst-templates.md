@@ -71,22 +71,31 @@ Final thoughts...
 ## 2. CJK Document (Chinese / Japanese / Korean)
 
 This template demonstrates CJK-specific configuration. Replace the placeholder
-text with actual CJK content when using.
+text with actual CJK content when using, and keep each Chinese or Japanese
+paragraph on one source line. See `references/typst-pitfalls.md` § CJK text.
 
 ```typst
 #set document(title: "CJK Document Title", author: "Author Name")
 #set page(paper: "a4", margin: 2.5cm)
+// Many Chinese system fonts (SimSun, SimHei, KaiTi) have no bold or italic face,
+// so *bold* would look like body text. Bold uses a sans font and italics use Kai.
+#let cjk-serif = ("Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "SimSun")
+#let cjk-sans = ("Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei")
+#let cjk-kai = ("Kaiti SC", "KaiTi")
 #set text(
-  font: ("Source Han Serif SC", "SimSun", "Microsoft YaHei", "Noto Serif CJK SC"),
+  font: cjk-serif,
   size: 12pt,
   lang: "zh",             // "zh" for Chinese, "ja" for Japanese, "ko" for Korean
-  cjk-latin-spacing: auto,
+  region: "cn",           // "tw" or "hk" for Traditional Chinese conventions
 )
 #set heading(numbering: "1.1")
-#set par(justify: true, leading: 1em, first-line-indent: 2em)
+#set par(justify: true, leading: 1em, first-line-indent: (amount: 2em, all: true))
+#show strong: set text(font: cjk-sans)
+#show emph: set text(font: cjk-kai, style: "normal")
+#show heading: set text(font: cjk-sans, weight: "bold")
 
 #align(center)[
-  #text(size: 22pt, weight: "bold")[Document Title Here]
+  #text(font: cjk-sans, size: 22pt, weight: "bold")[Document Title Here]
   #v(0.8em)
   #text(size: 14pt)[Author Name]
   #v(0.3em)

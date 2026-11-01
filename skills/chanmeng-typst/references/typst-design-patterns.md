@@ -22,14 +22,27 @@ Content here...
 
 ## CJK Document Setup
 
-Always set the text language and provide a font fallback chain for Chinese/Japanese/Korean:
+Set the text language and a font fallback chain for Chinese, Japanese or Korean. Omitting `lang` or a CJK-capable font causes missing glyphs (tofu □).
 
 ```typst
-#set text(lang: "zh", font: ("Source Han Serif SC", "SimSun", "Microsoft YaHei"))
-#set page(paper: "a4")
+#let cjk-serif = ("Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "SimSun")
+#let cjk-sans = ("Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei")
+#let cjk-kai = ("Kaiti SC", "KaiTi")
+
+#set text(lang: "zh", region: "cn", font: cjk-serif)
+#set par(first-line-indent: (amount: 2em, all: true))
+#show strong: set text(font: cjk-sans)
+#show emph: set text(font: cjk-kai, style: "normal")
+#show heading: set text(font: cjk-sans, weight: "bold")
 ```
 
-Omitting `lang` or a CJK-capable font causes missing glyphs (tofu □).
+To give Latin text its own font, put it first with `covers`. Without `covers`, the Latin font also takes Chinese quotation marks and sets them narrow:
+
+```typst
+#set text(font: ((name: "Times New Roman", covers: "latin-in-cjk"), "SimSun"))
+```
+
+For Japanese or Korean, change `lang` and use families such as `Noto Serif CJK JP`, `Yu Mincho`, `Noto Serif CJK KR` or `Malgun Gothic`. `references/typst-pitfalls.md` § CJK text explains these choices.
 
 ---
 
@@ -54,11 +67,11 @@ $ integral_0^infinity e^(-x^2) dif x = sqrt(pi) / 2 $
 ## Using Packages
 
 ```typst
-#import "@preview/cetz:0.3.4": canvas, draw
-#import "@preview/tablex:0.0.9": tablex
+#import "@preview/cetz:0.5.3": canvas, draw
+#import "@preview/showybox:2.0.4": showybox
 ```
 
-First compile with a new `@preview` package requires internet access.
+First compile with a new `@preview` package requires internet access. Use the native `table` for row spans, column spans and header rows instead of the older `tablex` package.
 
 ---
 
@@ -185,6 +198,39 @@ typst compile --root . --font-path fonts main.typ build/cv.pdf
 - **Variants import, they do not copy.** A second layout should reuse `tokens.typ` and the same data. A copied block of facts drifts from the original without any error.
 - **Trace figures to a source.** For reports and CVs, load facts from the data files or keep a note of where each number came from.
 - **Make the build fail loudly.** Stop on a non-zero `typst compile` exit, then run `scripts/check-pdf.py`. See `references/typst-pitfalls.md` § Build and metadata.
+
+---
+
+## Accessible PDFs
+
+Typst tags PDFs by default, but the tags are only as good as the source. These habits follow the official accessibility guide:
+
+- Use real headings, lists and `table.header` instead of styled text, and never skip a heading level.
+- Set `title` in `#set document(...)` and `lang` in `#set text(...)`.
+- Give every meaningful image `alt`, and every equation an `alt` through `math.equation`.
+- Keep text contrast high, especially light grey captions.
+
+To enforce the checks the compiler can make, target PDF/UA-1. It stops on problems such as a missing title or missing alt text. Compatible standards can be combined:
+
+```bash
+typst compile --pdf-standard ua-1 report.typ
+typst compile --pdf-standard a-2a,ua-1 report.typ
+```
+
+---
+
+## Several Outputs from One Project (Experimental)
+
+Bundle export writes several files from one source, which suits a designed CV and an ATS CV that share the same data. It needs a feature flag and may change between releases.
+
+```typst
+#document("cv-designed.pdf", title: [CV])[= Designed version]
+#document("cv-ats.pdf", title: [CV])[= ATS version]
+```
+
+```bash
+typst compile --features bundle --format bundle main.typ out/
+```
 
 ---
 

@@ -68,6 +68,9 @@ jobs:
       - name: Compile every template in the references
         run: python3 .github/scripts/compile-templates.py
 
+      - name: Compile the ATS example as PDF/UA-1
+        run: typst compile --pdf-standard ua-1 skills/chanmeng-typst/examples/resume-ats.typ /tmp/typst-out/resume-ats-ua.pdf
+
       - name: Check the ATS example with check-pdf.py
         run: |
           python3 skills/chanmeng-typst/scripts/check-pdf.py /tmp/typst-out/resume-ats.pdf \

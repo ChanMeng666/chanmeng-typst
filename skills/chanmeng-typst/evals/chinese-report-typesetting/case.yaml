@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: chinese-report-typesetting
+expected_outcome: |
+  report.pdf is a correctly typeset Chinese report with visible bold, indented first paragraphs and no stray spaces.

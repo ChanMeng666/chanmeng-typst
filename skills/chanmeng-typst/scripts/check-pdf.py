@@ -23,6 +23,11 @@ INSTALL_HINT = (
 COMPOUND = re.compile(r"[A-Za-z0-9][A-Za-z0-9.]*(?:-[A-Za-z0-9.]+)+")
 LOST_TILDE = re.compile(r"(?:^|[\s(\[])~\d", re.M)
 ATS_LAYOUT = re.compile(r"(?<![\w-])(grid|table|columns|image)\(")
+CJK_LINE_BREAK = re.compile(r"[\u3040-\u30ff\u4e00-\u9fff]\n[ \t]*[\u3040-\u30ff\u4e00-\u9fff]")
+WRAPPED_CJK = re.compile(r"(?<=[\u3000-\u30ff\u4e00-\u9fff\uff00-\uffef])\s*\n\s*(?=[\u3000-\u30ff\u4e00-\u9fff\uff00-\uffef])")
+BOLD_SOURCE = re.compile(r'(?m)^=+ |(?:^|\s)\*[^*\n]+\*|strong\(|weight: "bold"')
+NO_BOLD_FONTS = {"SimSun", "NSimSun", "SimHei", "KaiTi", "FangSong"}
+BOLD_FACE = re.compile(r"bold|black|heavy|semibold|demibold|medium", re.I)
 
 failures = []
 
@@ -42,6 +47,11 @@ def run(*cmd):
     if result.returncode != 0:
         sys.exit(f"{cmd[0]} failed: {result.stderr.strip()}")
     return result.stdout
+
+
+def flatten(text):
+    """Join wrapped lines. CJK lines join directly, since CJK has no word spaces."""
+    return re.sub(r"\s+", " ", WRAPPED_CJK.sub("", text))
 
 
 def strip_comments(source):
@@ -85,11 +95,24 @@ def check_fonts(pdf):
     bad_unicode = [name for name, _, unicode_map in rows if not unicode_map]
     check("fonts embedded", not bad_embed, ", ".join(bad_embed) or f"{len(rows)} fonts")
     check("fonts map to Unicode", not bad_unicode, ", ".join(bad_unicode))
+    return [name.split("+")[-1] for name, _, _ in rows]
+
+
+def check_cjk(sources, fonts):
+    """Warn about CJK problems that compile cleanly and look fine in the source."""
+    combined = "\n".join(strip_comments(path.read_text(encoding="utf-8")) for path in sources)
+    breaks = len(CJK_LINE_BREAK.findall(combined))
+    if breaks:
+        warn("source line break between CJK characters adds a space", f"{breaks} found")
+    no_bold = {name for name in fonts if name.split("-")[0] in NO_BOLD_FONTS}
+    has_bold_face = any(BOLD_FACE.search(name) for name in fonts)
+    if len(no_bold) == 1 and not has_bold_face and BOLD_SOURCE.search(combined):
+        warn("bold may not show", f"{', '.join(no_bold)} has no bold face. Map strong to another font")
 
 
 def check_sources(sources, text):
     """Find source compounds whose hyphen was lost, and tildes that became spaces."""
-    flat = re.sub(r"\s+", " ", text)
+    flat = flatten(text)
     lost = set()
     for path in sources:
         source = strip_comments(path.read_text(encoding="utf-8"))
@@ -146,16 +169,18 @@ def main():
     text = run("pdftotext", "-enc", "UTF-8", str(args.pdf), "-")
 
     check_pages(info, args)
-    check_fonts(args.pdf)
+    fonts = check_fonts(args.pdf)
+    print(f" info  fonts used: {', '.join(sorted(set(fonts)))}")
     check("text extracts", bool(text.strip()), "no text: the PDF may be image-only" if not text.strip() else "")
     if sources:
         check_sources(sources, text)
+        check_cjk(sources, fonts)
     else:
         warn("no .typ source given, so hyphen and tilde checks were skipped")
     if args.ats:
         check_ats(info, args.pdf, sources)
 
-    flat = re.sub(r"\s+", " ", text)
+    flat = flatten(text)
     for needle in args.require:
         check(f'contains "{needle}"', needle in flat)
 

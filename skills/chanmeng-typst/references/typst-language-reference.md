@@ -133,11 +133,11 @@ def hello():
 ```typst
 #set text(
   lang: "zh",
-  font: ("Source Han Serif SC", "SimSun", "Microsoft YaHei", "Noto Serif CJK SC"),
+  font: ("Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "SimSun"),
   size: 12pt,
   cjk-latin-spacing: auto,
 )
-#set par(leading: 1em, first-line-indent: 2em, justify: true)
+#set par(leading: 1em, first-line-indent: (amount: 2em, all: true), justify: true)
 ```
 
 ### Paragraph settings
@@ -721,8 +721,7 @@ context {
 #include "chapter1.typ"
 
 // Import from packages
-#import "@preview/cetz:0.3.4": canvas, draw
-#import "@preview/tablex:0.0.9": tablex, rowspanx, colspanx
+#import "@preview/cetz:0.5.3": canvas, draw
 #import "@preview/showybox:2.0.4": showybox
 ```
 
@@ -747,7 +746,12 @@ context {
 ```typst
 // At end of document
 #bibliography("refs.bib", style: "ieee")
-// Styles: "ieee", "apa", "chicago-author-date", "mla", etc.
+// Styles: "ieee", "apa", "chicago-author-date", "modern-language-association", etc.
+// Renamed in 0.15: "vancouver" is now "nlm-citation-sequence"; "mla-8" is now
+// "modern-language-association"
+
+// Per-chapter bibliographies: each citation goes to the next #bibliography
+// that contains its key. Use the target and group parameters to override this.
 
 // In text
 @einstein1905     // Citation
@@ -823,7 +827,6 @@ Popular packages from `@preview`:
 | Package | Description |
 |---------|-------------|
 | `cetz` | 2D/3D drawing (like TikZ) |
-| `tablex` | Advanced tables with row/colspan |
 | `showybox` | Colored boxes and callouts |
 | `codly` | Beautiful code listings |
 | `fletcher` | Diagrams with arrows |
@@ -1061,3 +1064,30 @@ Users can then use your template via:
 ```bash
 typst init @preview/my-template:0.1.0 my-project
 ```
+
+---
+
+## Added in Typst 0.15
+
+```typst
+// Thematic break that templates can restyle
+#divider()
+
+// Match elements inside other elements
+#context query(selector(strong).within(heading)).len()
+
+// Align list markers
+#set list(marker-align: horizon + start)
+
+// Bleed margins for professional printing
+#set page(bleed: 3mm)
+
+// Inclusive ranges and number parsing
+#range(1, 3, inclusive: true)
+#int("ff", base: 16)
+
+// Spacing that is both weak and fractional
+#v(1fr, weak: true)
+```
+
+Paths can be passed as values with `path("file.png")`, and they resolve relative to the file that created them. Variable fonts are supported: use the family name without "Variable", "Var" or "VF".
