@@ -31,7 +31,11 @@ python .github/scripts/compile-templates.py
 typst compile --pdf-standard ua-1 skills/chanmeng-typst/examples/resume-ats.typ out.pdf
 python skills/chanmeng-typst/scripts/check-pdf.py out.pdf \
   --source skills/chanmeng-typst/examples/resume-ats.typ --ats --pages 1
+claude plugin validate .claude-plugin/plugin.json
+claude plugin validate .
 ```
+
+The `plugin-validate` CI job treats every validator warning as a failure except one: this file sits at the plugin root, and Claude Code does not load it there. That is intended, because it is for maintainers, not for users of the skill.
 
 `compile-templates.py` compiles all 9 templates in `references/typst-templates.md`. Compiling cleanly proves little here, because the bugs this skill targets produce no error. To check a layout or CJK claim, render the PDF and look at it, or read `pdffonts` and `pdftotext`.
 

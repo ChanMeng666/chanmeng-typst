@@ -80,3 +80,40 @@ jobs:
 
       - name: Run verify-typst.sh
         run: bash skills/chanmeng-typst/scripts/verify-typst.sh
+
+  # Claude Code's own manifest validator, on the latest Claude Code on purpose:
+  # a red run here with a green `validate` job means upstream tightened a
+  # manifest rule, not that the skill regressed. It needs no credentials.
+  plugin-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      # Strict, except for one known warning: the plugin source is the repo
+      # root, so the maintainers' CLAUDE.md sits inside the plugin. Claude Code
+      # does not load it there, which is what we want. Any other warning fails.
+      - name: Validate plugin and marketplace
+        run: |
+          claude --version
+          for target in .claude-plugin/plugin.json .; do
+            claude plugin validate --json "$target" > report.json || true
+            python3 - <<'PY'
+          import json, sys
+          r = json.load(open("report.json"))
+          sections = [r["manifest"], *r.get("contents", [])]
+          errors = [e for s in sections for e in s["errors"]]
+          warnings = [w for s in sections for w in s["warnings"]
+                      if not w["message"].startswith("CLAUDE.md at the plugin root")]
+          for item in errors + warnings:
+              print(f'::error::{r["target"]}: {item["path"]}: {item["message"]}')
+          sys.exit(1 if errors or warnings or not r["success"] else 0)
+          PY
+          done
