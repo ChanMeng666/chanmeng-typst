@@ -3,3 +3,6 @@
 *.svg
 .DS_Store
 Thumbs.db
+
+# The plugin icon is a source file, not build output.
+!.claude-plugin/icon.png
