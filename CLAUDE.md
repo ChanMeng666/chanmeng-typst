@@ -64,6 +64,13 @@ The `plugin-validate` CI job treats every validator warning as a failure except 
 
 Docs-only changes do not need a version bump.
 
+## Plugin packaging
+
+- **Icon.** The icon is `.claude-plugin/icon.png`, where the validator and plugin clients look for it. The repo's `.gitignore` excludes `*.png` except `!.claude-plugin/icon.png`, so keep that exception. Removing it makes CI fail with `ICON_MISSING`.
+- **Clients cache by version.** Claude Code serves an installed plugin from a cache keyed by `version` in `plugin.json`. A change to `SKILL.md`, `references/` or `scripts/` reaches existing users only after a version bump. Only README, CHANGELOG and this file may change without a bump.
+- **Two manifests, two checks.** At the repo root, `claude plugin validate .` checks only `marketplace.json`, so `plugin.json` needs its own `validate .claude-plugin/plugin.json` run. CI runs both with `--strict`.
+- **Other clients read these files too.** Grok Bot, which runs on a Cursor backend, lists this repo in its plugin market by reading `.claude-plugin/marketplace.json` from installed Claude marketplaces. A wrong name, description or icon shows up there as well.
+
 ## Upgrading Typst
 
 1. Upgrade locally. On Windows: `winget upgrade Typst.Typst`.
