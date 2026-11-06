@@ -42,7 +42,15 @@ Verify with `typst --version` (should print v0.14 or newer; tested on v0.15.1). 
 
 ## Installation
 
-Pick **one** of the four methods below. They are equivalent in capability — choose by your environment.
+Pick **one** of the methods below. They are equivalent in capability — choose by your environment.
+
+### Any agent, with the skills CLI
+
+Installs into Claude Code, Cursor, Codex, GitHub Copilot, Gemini CLI and the other agents the CLI supports. Listed on [skills.sh](https://skills.sh/chanmeng666).
+
+```bash
+npx skills add ChanMeng666/chanmeng-typst
+```
 
 ### Method 1 — Claude Code plugin marketplace (recommended)
 
